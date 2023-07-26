@@ -1,12 +1,10 @@
-import { db } from "./firebaseConnection";
-import "./app.css";
+import { BrowserRouter } from "react-router-dom";
+import RoutesApp from "./routes";
 
-function App() {
+export default function App() {
   return (
-    <div>
-      <h1>HELLO WORLD!</h1>
-    </div>
-  );
+    <BrowserRouter>
+      <RoutesApp />
+    </BrowserRouter>
+  )
 }
-
-export default App;
