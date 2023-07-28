@@ -5,7 +5,7 @@ import './admin.css'
 import { auth, db } from '../../firebaseConnection';
 import { signOut } from 'firebase/auth';
 
-import { addDoc, collection, onSnapshot, query, orderBy, where } from 'firebase/firestore';
+import { addDoc, collection, onSnapshot, query, orderBy, where, doc, deleteDoc } from 'firebase/firestore';
 
 export default function Admin() {
     const [tarefaInput, setTarefaInput] = useState('');
@@ -33,7 +33,6 @@ export default function Admin() {
                             userUid: doc.data().userUid,
                         })
                     })
-                    console.log(lista);
                     setTarefas(lista);
                 })
             }
@@ -67,6 +66,11 @@ export default function Admin() {
         await signOut(auth);
     }
 
+    async function deleteTarefa(id) {
+        const docRef = doc(db, "tarefas", id)
+        await deleteDoc(docRef);
+    }
+
     return (
         <div className='admin-container'>
             <h1>
@@ -81,19 +85,21 @@ export default function Admin() {
                 </button>
             </form>
 
-            <article className='list'>
-                <p>
-                    Estudar JavaScript e ReactJS hoje a noite
-                </p>
-                <div>
-                    <button>
-                        Editar
-                    </button>
-                    <button className='btn-delete'>
-                        Concluir
-                    </button>
-                </div>
-            </article>
+            {tarefas.map((item) => (
+                <article key={item.id} className='list'>
+                    <p>
+                        {item.tarefa}
+                    </p>
+                    <div>
+                        <button>
+                            Editar
+                        </button>
+                        <button onClick={() => deleteTarefa(item.id)} className='btn-delete'>
+                            Concluir
+                        </button>
+                    </div>
+                </article>
+            ))}
 
             <button className='btn-logout' onClick={handleLogout}>
                 Sair
